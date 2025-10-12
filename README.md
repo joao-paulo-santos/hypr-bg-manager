@@ -86,7 +86,7 @@ exec-once = hypr-bg-manager -i global -t timer
 
 | Flag | Description | Values |
 |------|-------------|---------|
-| `-d, --dir` | Wallpaper directory | Path (default: `~/.config/hypr/bg`) |
+| `-d, --dir` | Wallpaper directory | Path (default: `~/wallpapers`) |
 | `-i, --img` | Image source | `pw` (per-workspace), `global` |
 | `-t, --trigger` | Trigger type | `socket`, `timer`, `both` |
 | `-s, --service` | Wallpaper service | `swww`, `hyprpaper`, `swaybg`, `mpvpaper` |

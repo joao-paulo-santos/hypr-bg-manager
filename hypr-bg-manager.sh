@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Default background directory
-BG_DIR="$HOME/.config/hypr/bg"
+BG_DIR="$HOME/wallpapers"
 # Default image source type (pw = per workspace, global = shared folder)
 IMG_SOURCE="pw"
 # Default trigger type (socket = workspace change, timer = time interval)
@@ -205,7 +205,7 @@ get_random_wallpaper() {
   
   # Get all image files (formats based on service)
   format_filter=$(get_supported_formats)
-  wallpapers=$(find "$workspace_bg_dir" -maxdepth 1 -type f $format_filter 2>/dev/null)
+  wallpapers=$(eval "find \"$workspace_bg_dir\" -maxdepth 1 -type f $format_filter" 2>/dev/null)
   
   if [ -z "$wallpapers" ]; then
     echo "Warning: No wallpapers found in $workspace_bg_dir" >&2
