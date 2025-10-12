@@ -14,7 +14,7 @@ optdepends=(
     'mpvpaper: Video wallpaper service'
 )
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('cb4ab89fbc7d556619eafd3c57674ce3b05779baf2ec6ad4ff09f302e37e264f')
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
