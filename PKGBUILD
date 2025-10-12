@@ -1,4 +1,4 @@
-# Maintainer: Your Name <your.email@example.com>
+# Maintainer: Joao Paulo Santos <lw.joao.paulo.santos@gmail.com>
 pkgname=hypr-bg-manager
 pkgver=1.0.0
 pkgrel=1
