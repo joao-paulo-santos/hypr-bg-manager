@@ -1,6 +1,20 @@
-# Hypr Background Manager
+<div align="center">
+  
+<img src="readme_assets/logo.png" alt="Logo" width="300" height="129">
 
-Dynamic wallpaper manager for Hyprland with multiple service backends and trigger modes.
+---
+
+  <h3 align="center">Hypr Background Manager</h3>
+
+  <p align="center">
+    Dynamic wallpaper manager for Hyprland with multiple service backends and trigger modes.
+    <br />
+    <br />
+    <a href="https://github.com/joao-paulo-santos/hypr-bg-manager/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/joao-paulo-santos/hypr-bg-manager/issues">Request Feature</a>
+  </p>
+</div>
 
 ## Installation
 
