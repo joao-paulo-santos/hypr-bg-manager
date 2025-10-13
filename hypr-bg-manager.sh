@@ -11,6 +11,8 @@ TIMER_INTERVAL=30
 SERVICE="swww"
 # Extra flags for the service
 EXTRA_FLAGS=""
+# Default output target (current = active monitor only, all = all monitors)
+OUTPUT_TARGET="current"
 
 # Parse command line arguments
 while [ $# -gt 0 ]; do
@@ -47,6 +49,14 @@ while [ $# -gt 0 ]; do
       EXTRA_FLAGS="$2"
       shift 2
       ;;
+    -o|--output)
+      OUTPUT_TARGET="$2"
+      if [ "$OUTPUT_TARGET" != "current" ] && [ "$OUTPUT_TARGET" != "all" ]; then
+        echo "Error: Output target must be 'current' (active monitor) or 'all' (all monitors)" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
     --interval)
       TIMER_INTERVAL="$2"
       if ! echo "$TIMER_INTERVAL" | grep -qE '^[0-9]+$' || [ "$TIMER_INTERVAL" -lt 1 ]; then
@@ -72,6 +82,9 @@ while [ $# -gt 0 ]; do
       echo "                       'swaybg' = swaybg"
       echo "                       'mpvpaper' = mpvpaper"
       echo "  -e, --extra-flags    Extra flags to pass to the service"
+      echo "  -o, --output TARGET  Set output target:"
+      echo "                       'current' = active monitor only (default)"
+      echo "                       'all' = all monitors"
       echo "  --interval SECS      Timer interval in seconds (default: 30, only for timer/both mode)"
       echo "  -h, --help           Show this help message"
       exit 0
@@ -157,6 +170,11 @@ get_current_workspace() {
   echo "$workspace_name"
 }
 
+# Get all available monitors
+get_all_monitors() {
+  hyprctl monitors | grep -o '^Monitor [^:]*' | cut -d' ' -f2
+}
+
 # Set wallpaper for current workspace and monitor
 set_current_wallpaper() {
   if [ "$IMG_SOURCE" = "global" ]; then
@@ -168,9 +186,19 @@ set_current_wallpaper() {
   wallpaper=$(get_random_wallpaper "$workspace_name")
   
   if [ $? -eq 0 ] && [ -n "$wallpaper" ]; then
-    output_name=$(get_current_monitor)
-    set_wallpaper_with_service "$wallpaper" "$output_name"
-    echo "Set wallpaper for workspace '$workspace_name' using $SERVICE: $wallpaper"
+    if [ "$OUTPUT_TARGET" = "all" ]; then
+      # Set wallpaper on all monitors
+      monitors=$(get_all_monitors)
+      for monitor in $monitors; do
+        set_wallpaper_with_service "$wallpaper" "$monitor"
+      done
+      echo "Set wallpaper for workspace '$workspace_name' on all monitors using $SERVICE: $wallpaper"
+    else
+      # Set wallpaper on current monitor only (default)
+      output_name=$(get_current_monitor)
+      set_wallpaper_with_service "$wallpaper" "$output_name"
+      echo "Set wallpaper for workspace '$workspace_name' on monitor '$output_name' using $SERVICE: $wallpaper"
+    fi
   else
     echo "Failed to set wallpaper for workspace '$workspace_name'" >&2
   fi
@@ -203,19 +231,16 @@ get_random_wallpaper() {
     return 1
   fi
   
-  # Get all image files (formats based on service)
+    # Get all image files (formats based on service)
   format_filter=$(get_supported_formats)
-  wallpapers=$(eval "find \"$workspace_bg_dir\" -type f $format_filter" 2>/dev/null)
   
-  if [ -z "$wallpapers" ]; then
+  # Optimized random selection
+  selected_wallpaper=$(eval "find \"$workspace_bg_dir\" -type f $format_filter" 2>/dev/null | sort -R | head -1)
+  
+  if [ -z "$selected_wallpaper" ]; then
     echo "Warning: No wallpapers found in $workspace_bg_dir" >&2
     return 1
   fi
-  
-  # Select random wallpaper
-  wallpaper_count=$(echo "$wallpapers" | wc -l)
-  random_index=$(($(od -An -N2 -tu2 /dev/urandom) % wallpaper_count + 1))
-  selected_wallpaper=$(echo "$wallpapers" | sed -n "${random_index}p")
   
   echo "$selected_wallpaper"
 }
@@ -236,10 +261,19 @@ handle() {
       wallpaper=$(get_random_wallpaper "$workspace_name")
       
       if [ $? -eq 0 ] && [ -n "$wallpaper" ]; then
-        # Get the correct output name
-        output_name=$(get_current_monitor)
-        set_wallpaper_with_service "$wallpaper" "$output_name"
-        echo "Set wallpaper for workspace '$workspace_name' using $SERVICE: $wallpaper"
+        if [ "$OUTPUT_TARGET" = "all" ]; then
+          # Set wallpaper on all monitors
+          monitors=$(get_all_monitors)
+          for monitor in $monitors; do
+            set_wallpaper_with_service "$wallpaper" "$monitor"
+          done
+          echo "Set wallpaper for workspace '$workspace_name' on all monitors using $SERVICE: $wallpaper"
+        else
+          # Set wallpaper on current monitor only (default)
+          output_name=$(get_current_monitor)
+          set_wallpaper_with_service "$wallpaper" "$output_name"
+          echo "Set wallpaper for workspace '$workspace_name' on monitor '$output_name' using $SERVICE: $wallpaper"
+        fi
       else
         echo "Failed to set wallpaper for workspace '$workspace_name'" >&2
       fi

@@ -62,7 +62,7 @@ exec-once = swww-deamon
 
 # Start background manager (default: global timer mode)
 exec-once = hypr-bg-manager -i global -t timer
-# exec-once = hypr-bg-manager -s swaybg -i pw -t socket
+# exec-once = hypr-bg-manager -d ~/.config/hypr/wallpapers -i pw -t socket -s swaybg
 # exec-once = hypr-bg-manager -s hyprpaper -i pw -t both --interval 120
 ```
 
@@ -71,15 +71,25 @@ exec-once = hypr-bg-manager -i global -t timer
 - **Multiple Services**: swww, hyprpaper, swaybg, mpvpaper
 - **Trigger Modes**: workspace change, timer, or both
 - **Image Sources**: per-workspace or global random
+- **Output Control**: current monitor or all monitors
+- **Subfolder Support**: organize wallpapers in nested directories
 - **Auto-format Detection**: service-specific supported formats
 
 ## Directory Structure
 
 ```
 ~/Pictures/wallpapers/
-├── work/       # "work" workspace wallpapers
-├── gaming/     # "gaming" workspace wallpapers
-└── shared/     # Global mode wallpapers & fallback
+├── work/           # "work" workspace wallpapers
+│   ├── clean/      # Subfolders for organization
+│   └── tech/
+├── gaming/         # "gaming" workspace wallpapers
+│   ├── fps/
+│   └── rpg/
+└── shared/         # Global mode wallpapers & fallback
+    ├── nature/
+    │   ├── landscapes/
+    │   └── seascapes/
+    └── abstract/
 ```
 
 ## Options
@@ -90,6 +100,7 @@ exec-once = hypr-bg-manager -i global -t timer
 | `-i, --img` | Image source | `pw` (per-workspace), `global` |
 | `-t, --trigger` | Trigger type | `socket`, `timer`, `both` |
 | `-s, --service` | Wallpaper service | `swww`, `hyprpaper`, `swaybg`, `mpvpaper` |
+| `-o, --output` | Output target | `current` (active monitor), `all` (all monitors) |
 | `-e, --extra-flags` | Service flags | Custom flags |
 | `--interval` | Timer interval | Seconds (default: 30) |
 
@@ -104,6 +115,12 @@ hypr-bg-manager -s mpvpaper -t timer --interval 45
 
 # swaybg with extra flags
 hypr-bg-manager -s swaybg -e "-m stretch"
+
+# Set wallpapers on all monitors simultaneously
+hypr-bg-manager -o all -i global -t timer
+
+# Per-workspace wallpapers on current monitor only
+hypr-bg-manager -o current -i pw -t socket
 ```
 
 ## Service Notes
