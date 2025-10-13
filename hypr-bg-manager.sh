@@ -205,7 +205,7 @@ get_random_wallpaper() {
   
   # Get all image files (formats based on service)
   format_filter=$(get_supported_formats)
-  wallpapers=$(eval "find \"$workspace_bg_dir\" -maxdepth 1 -type f $format_filter" 2>/dev/null)
+  wallpapers=$(eval "find \"$workspace_bg_dir\" -type f $format_filter" 2>/dev/null)
   
   if [ -z "$wallpapers" ]; then
     echo "Warning: No wallpapers found in $workspace_bg_dir" >&2
