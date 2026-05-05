@@ -68,7 +68,7 @@ exec-once = hypr-bg-manager -i global -t timer
 
 ## Features
 
-- **Multiple Services**: swww, hyprpaper, swaybg, mpvpaper
+- **Multiple Services**: swww, awww, hyprpaper, swaybg, mpvpaper
 - **Trigger Modes**: workspace change, timer, or both
 - **Image Sources**: per-workspace or global random
 - **Output Control**: current monitor or all monitors
@@ -99,7 +99,7 @@ exec-once = hypr-bg-manager -i global -t timer
 | `-d, --dir` | Wallpaper directory | Path (default: `~/wallpapers`) |
 | `-i, --img` | Image source | `pw` (per-workspace), `global` |
 | `-t, --trigger` | Trigger type | `socket`, `timer`, `both` |
-| `-s, --service` | Wallpaper service | `swww`, `hyprpaper`, `swaybg`, `mpvpaper` |
+| `-s, --service` | Wallpaper service | `swww`, `awww`, `hyprpaper`, `swaybg`, `mpvpaper` |
 | `-o, --output` | Output target | `current` (active monitor), `all` (all monitors) |
 | `-e, --extra-flags` | Service flags | Custom flags |
 | `--interval` | Timer interval | Seconds (default: 30) |
@@ -126,6 +126,7 @@ hypr-bg-manager -o current -i pw -t socket
 ## Service Notes
 
 - **swww**: Supports GIF animations, fastest transitions
+- **awww**: swww successor with improved performance
 - **hyprpaper**: Native Hyprland, requires preloading
 - **swaybg**: Lightweight, good for minimal setups  
 - **mpvpaper**: Supports videos and animated wallpapers
