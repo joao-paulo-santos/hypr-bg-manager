@@ -1,6 +1,6 @@
 # Maintainer: Joao Paulo Santos <lw.joao.paulo.santos@gmail.com>
 pkgname=hypr-bg-manager
-pkgver=1.0.3
+pkgver=1.0.4
 pkgrel=1
 pkgdesc="Dynamic wallpaper manager for Hyprland with multiple service backends and trigger modes"
 arch=('any')
@@ -9,6 +9,7 @@ license=('MIT')
 depends=('hyprland' 'socat')
 optdepends=(
     'swww: Fast wallpaper service with GIF support'
+    'awww: Wallpaper service (swww successor)'
     'hyprpaper: Native Hyprland wallpaper service'
     'swaybg: Lightweight wallpaper service'
     'mpvpaper: Video wallpaper service'
