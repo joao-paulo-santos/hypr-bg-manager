@@ -39,8 +39,8 @@ while [ $# -gt 0 ]; do
       ;;
     -s|--service)
       SERVICE="$2"
-      if [ "$SERVICE" != "swww" ] && [ "$SERVICE" != "hyprpaper" ] && [ "$SERVICE" != "swaybg" ] && [ "$SERVICE" != "mpvpaper" ]; then
-        echo "Error: Service must be 'swww', 'hyprpaper', 'swaybg', or 'mpvpaper'" >&2
+      if [ "$SERVICE" != "swww" ] && [ "$SERVICE" != "awww" ] && [ "$SERVICE" != "hyprpaper" ] && [ "$SERVICE" != "swaybg" ] && [ "$SERVICE" != "mpvpaper" ]; then
+        echo "Error: Service must be 'swww', 'awww', 'hyprpaper', 'swaybg', or 'mpvpaper'" >&2
         exit 1
       fi
       shift 2
@@ -78,6 +78,7 @@ while [ $# -gt 0 ]; do
       echo "                       'both' = workspace change + timer"
       echo "  -s, --service SVC    Set wallpaper service:"
       echo "                       'swww' = swww (default)"
+      echo "                       'awww' = awww (swww successor)"
       echo "                       'hyprpaper' = hyprpaper"
       echo "                       'swaybg' = swaybg"
       echo "                       'mpvpaper' = mpvpaper"
@@ -103,6 +104,9 @@ get_supported_formats() {
     swww)
       echo "\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.webp\" -o -iname \"*.bmp\" -o -iname \"*.gif\" \)"
       ;;
+    awww)
+      echo "\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.webp\" -o -iname \"*.bmp\" -o -iname \"*.gif\" -o -iname \"*.tiff\" -o -iname \"*.avif\" -o -iname \"*.svg\" \)"
+      ;;
     hyprpaper)
       echo "\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.webp\" -o -iname \"*.bmp\" \)"
       ;;
@@ -126,6 +130,13 @@ set_wallpaper_with_service() {
         swww img -o "$output_name" $EXTRA_FLAGS "$wallpaper_path"
       else
         swww img -o "$output_name" -t none --transition-duration 0.1 --transition-fps 120 "$wallpaper_path"
+      fi
+      ;;
+    awww)
+      if [ -n "$EXTRA_FLAGS" ]; then
+        awww img -o "$output_name" $EXTRA_FLAGS "$wallpaper_path"
+      else
+        awww img -o "$output_name" --transition-type none --transition-fps 120 "$wallpaper_path"
       fi
       ;;
     hyprpaper)
